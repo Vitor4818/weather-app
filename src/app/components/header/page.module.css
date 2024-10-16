@@ -1,0 +1,37 @@
+.headerNavigation{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 8vh;
+    background-color: white;
+}
+
+.navigation{
+    display: flex;
+    align-items: flex-end;
+    width: 90%;
+}
+
+.wrappedMenu{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0;
+    list-style: none;
+}
+
+.menuItem{
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 0;
+    font-size: 1rem;
+    color: black;
+}
+
+.linkNavigation{
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
