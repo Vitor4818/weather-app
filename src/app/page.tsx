@@ -6,6 +6,9 @@ import { useEffect, useState } from 'react';
 
 export default function Home() {
 
+
+
+
   //varaiveis
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [cityData, setCityData] = useState(null);
@@ -50,11 +53,14 @@ export default function Home() {
 
 
   useEffect(() => {
-    const cityCode = 244;  // Código fixo para São Paulo
-    loadCity(cityCode);
-    loadForecast(cityCode);
-  }, []);  // O array vazio faz com que o efeito seja executado apenas uma vez ao montar o componente, evitanto que ele sobrecarregue e dê aquele erro de sobrecarga
+    const urlParams = new URLSearchParams(window.location.search);
+    const cityCode = urlParams.get("cityCode"); //pega o cityCode da URL
 
+    if (cityCode) {
+      loadCity(Number(cityCode)); // Carrega os dados da cidade
+      loadForecast(Number(cityCode)); // Carrega a previsão do tempo
+    }
+  }, []); // O array vazio faz com que o efeito seja executado apenas uma vez ao montar o componente
 
 
 
@@ -64,6 +70,7 @@ export default function Home() {
 
   return (
     <main>
+
       <h1>Inicio</h1>
       <br />
       <h2>Localidade: {cityData?.cidade}/{cityData?.estado}</h2>  
