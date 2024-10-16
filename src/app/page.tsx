@@ -1,95 +1,94 @@
+"use client"
+
 import Image from 'next/image'
 import styles from './page.module.css'
+import { useEffect, useState } from 'react';
 
 export default function Home() {
+
+  //varaiveis
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [cityData, setCityData] = useState(null);
+  const [forecast, setForecast] = useState ([])
+
+
+//Faz requisição para pegar os dados da cidade
+  const loadCity = async (cityCode: number)=> {
+    setIsLoading(true) 
+    try{
+      const response = await fetch (`https://brasilapi.com.br/api/cptec/v1/clima/previsao/${cityCode}`)
+      const data = await response.json()
+      setCityData(data)
+      console.log(cityData)
+    } catch (error){
+      console.log(error)
+    }finally{
+      setIsLoading(false)
+    }
+  }
+
+
+//Faz requisição para pegar os dados climaticos da cidade
+  const loadForecast = async (cityCode: number) =>{
+    const params = {
+      code: cityCode,
+      days: 6
+    }
+    setIsLoading(true)
+    try{
+      const response = await fetch (`https://brasilapi.com.br/api/cptec/v1/clima/previsao/${params.code}/${params.days}`)
+      const data = await response.json()
+      setForecast(data.clima)
+    } catch (error){
+      console.log(error)
+    } finally{
+      setIsLoading(false)
+    }
+
+  }
+
+
+
+  useEffect(() => {
+    const cityCode = 244;  // Código fixo para São Paulo
+    loadCity(cityCode);
+    loadForecast(cityCode);
+  }, []);  // O array vazio faz com que o efeito seja executado apenas uma vez ao montar o componente, evitanto que ele sobrecarregue e dê aquele erro de sobrecarga
+
+
+
+
+
+
+
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
-      </div>
+    <main>
+      <h1>Inicio</h1>
+      <br />
+      <h2>Localidade: {cityData?.cidade}/{cityData?.estado}</h2>  
+      <br />
+      <h3>Descrição: {cityData?.clima[0].condicao_desc}</h3>
+      <br />
 
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
+      <p>Previsão para os próximos seis dias:</p>
+      <br />
 
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
+      {forecast.map((item) => (
+  <div key={item.data}>
+    <span>data: {item.data} </span>
+    <br />
+    <span>Condição: {item.condicao} </span>
+    <br />
+    <span>Min: {item.min}</span>
+    <br />
+    <span>Max: {item.max}</span>
+    <br />
+    <br />
+  </div>
+))}
 
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
+      
     </main>
   )
 }
