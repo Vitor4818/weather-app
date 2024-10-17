@@ -2,6 +2,8 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Button } from "../components/button/Button";
+import { Input } from "../components/input/Input";
 
 
 
@@ -48,7 +50,7 @@ export default function Busca() {
   return (
     <>
       <form>
-        <input
+        <Input
           id="search"
           name="search"
           type="text"
@@ -56,9 +58,9 @@ export default function Busca() {
           placeholder="Buscar cidade"
         />
         <h1>{cityName}</h1>
-        <button type="button" onClick={handleClick} disabled={isLoading}>
+        <Button type="button" onClick={handleClick} disabled={isLoading}>
           {isLoading ? "Carregando..." : "Buscar"}
-        </button>
+        </Button>
       </form>
 
       <ul>
